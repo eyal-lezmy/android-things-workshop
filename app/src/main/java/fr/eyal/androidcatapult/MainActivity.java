@@ -2,19 +2,13 @@ package fr.eyal.androidcatapult;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 
 import com.google.android.things.contrib.driver.button.Button;
 import com.google.android.things.contrib.driver.button.ButtonInputDriver;
 import com.google.android.things.contrib.driver.pwmservo.Servo;
-import com.google.android.things.pio.Gpio;
-import com.google.android.things.pio.GpioCallback;
 import com.google.android.things.pio.PeripheralManagerService;
-import com.google.android.things.pio.Pwm;
-import com.google.android.things.userdriver.UserSensorDriver;
-import com.google.android.things.userdriver.UserSensorReading;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +24,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-         super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
         PeripheralManagerService service = new PeripheralManagerService();
 
@@ -99,7 +93,7 @@ public class MainActivity extends Activity {
                 mButtonInputDriver.close();
             } catch (IOException e) {
                 Log.e(TAG, "Error closing Button driver", e);
-            } finally{
+            } finally {
                 mButtonInputDriver = null;
             }
         }
