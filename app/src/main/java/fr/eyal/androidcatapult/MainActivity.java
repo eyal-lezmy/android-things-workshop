@@ -36,6 +36,7 @@ public class MainActivity extends Activity {
         try {
             mServo = new Servo(BoardDefaults.getServoPort());
             mServo.setAngleRange(0f, 180f);
+            mServo.setPulseDurationRange(0.6, 2.4);
             mServo.setEnabled(true);
 
             mButtonInputDriver = new ButtonInputDriver(BoardDefaults.getButtonPort(),
