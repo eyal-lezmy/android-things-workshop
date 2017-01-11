@@ -39,8 +39,8 @@ public class BoardDefaults {
                 return "IO13";
 //            case DEVICE_EDISON:
 //                return "GP12";
-//            case DEVICE_RPI3:
-//                return "PWM0";
+            case DEVICE_RPI3:
+                return "BCM17";
 //            case DEVICE_NXP:
 //                return "PWM7";
             default:
@@ -57,10 +57,10 @@ public class BoardDefaults {
                 return "IO6";
 //            case DEVICE_EDISON:
 //                return "GP12";
-//            case DEVICE_RPI3:
-//                return "PWM0";
-            case DEVICE_NXP:
-                return "PWM7";
+            case DEVICE_RPI3:
+                return "PWM0";
+//            case DEVICE_NXP:
+//                return "PWM7";
             default:
                 throw new IllegalStateException("Unknown Build.DEVICE " + Build.DEVICE);
         }
