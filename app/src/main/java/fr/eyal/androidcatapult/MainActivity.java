@@ -18,8 +18,11 @@ import static android.content.ContentValues.TAG;
 public class MainActivity extends Activity {
 
     private ButtonInputDriver mButtonInputDriver;
+    private ButtonInputDriver mButtonInputDriverTrigger;
     private Servo mServo;
+    private Servo mServoTrigger;
     private double mCurrentAngle;
+    private double mCurrentAngleTrigger;
 
 
     @Override
@@ -39,9 +42,19 @@ public class MainActivity extends Activity {
             mServo.setPulseDurationRange(0.6, 2.4);
             mServo.setEnabled(true);
 
+            mServoTrigger = new Servo(BoardDefaults.getServoTriggerPort());
+            mServoTrigger.setAngleRange(0f, 90f);
+            mServoTrigger.setPulseDurationRange(1, 2);
+            mServoTrigger.setEnabled(true);
+
             mButtonInputDriver = new ButtonInputDriver(BoardDefaults.getButtonPort(),
                     Button.LogicState.PRESSED_WHEN_LOW, KeyEvent.KEYCODE_SPACE);
             mButtonInputDriver.register();
+
+            mButtonInputDriverTrigger = new ButtonInputDriver(BoardDefaults.getButtonTriggerPort(),
+                    Button.LogicState.PRESSED_WHEN_LOW, KeyEvent.KEYCODE_0);
+            mButtonInputDriverTrigger.register();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,14 +65,16 @@ public class MainActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_SPACE) {
-            toogleTrigger();
+            toogleServo();
             return true;
+        } else if (keyCode == KeyEvent.KEYCODE_0) {
+            toogleTrigger();
         }
 
         return super.onKeyDown(keyCode, event);
     }
 
-    private void toogleTrigger() {
+    private void toogleServo() {
         if (mCurrentAngle < mServo.getMaximumAngle()) {
             mCurrentAngle = mServo.getMaximumAngle();
         } else {
@@ -71,7 +86,22 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, "Button pressed change angle to " + mCurrentAngle);
+        Log.i(TAG, "Button pressed fire change angle to " + mCurrentAngle);
+    }
+
+    private void toogleTrigger() {
+        if (mCurrentAngleTrigger < mServoTrigger.getMaximumAngle()) {
+            mCurrentAngleTrigger = mServoTrigger.getMaximumAngle();
+        } else {
+            mCurrentAngleTrigger = mServoTrigger.getMinimumAngle();
+        }
+
+        try {
+            mServoTrigger.setAngle(mCurrentAngleTrigger);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "Button pressed trigger change angle to " + mCurrentAngleTrigger);
     }
 
     @Override
@@ -96,6 +126,27 @@ public class MainActivity extends Activity {
                 Log.e(TAG, "Error closing Button driver", e);
             } finally {
                 mButtonInputDriver = null;
+            }
+        }
+
+        if (mServoTrigger != null) {
+            try {
+                mServoTrigger.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error closing Servo trigger");
+            } finally {
+                mServoTrigger = null;
+            }
+        }
+
+        if (mButtonInputDriverTrigger != null) {
+            mButtonInputDriverTrigger.unregister();
+            try {
+                mButtonInputDriverTrigger.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error closing Button trigger driver", e);
+            } finally {
+                mButtonInputDriverTrigger = null;
             }
         }
     }

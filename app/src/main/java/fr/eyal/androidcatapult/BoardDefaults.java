@@ -51,10 +51,46 @@ public class BoardDefaults {
     /**
      * Return the preferred PWM port for each board.
      */
+    public static String getButtonTriggerPort() {
+        switch (getBoardVariant()) {
+            case DEVICE_EDISON_ARDUINO:
+                return "IO12";
+//            case DEVICE_EDISON:
+//                return "GP12";
+//            case DEVICE_RPI3:
+//                return "BCM17";
+//            case DEVICE_NXP:
+//                return "PWM7";
+            default:
+                throw new IllegalStateException("Unknown Build.DEVICE " + Build.DEVICE);
+        }
+    }
+
+    /**
+     * Return the preferred PWM port for each board.
+     */
     public static String getServoPort() {
         switch (getBoardVariant()) {
             case DEVICE_EDISON_ARDUINO:
                 return "IO6";
+//            case DEVICE_EDISON:
+//                return "GP12";
+            case DEVICE_RPI3:
+                return "PWM0";
+//            case DEVICE_NXP:
+//                return "PWM7";
+            default:
+                throw new IllegalStateException("Unknown Build.DEVICE " + Build.DEVICE);
+        }
+    }
+
+    /**
+     * Return the preferred PWM port for each board.
+     */
+    public static String getServoTriggerPort() {
+        switch (getBoardVariant()) {
+            case DEVICE_EDISON_ARDUINO:
+                return "IO5";
 //            case DEVICE_EDISON:
 //                return "GP12";
             case DEVICE_RPI3:
