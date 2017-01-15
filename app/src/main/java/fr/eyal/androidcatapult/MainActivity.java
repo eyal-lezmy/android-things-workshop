@@ -3,27 +3,21 @@ package fr.eyal.androidcatapult;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 
 import com.google.android.things.contrib.driver.button.Button;
-import com.google.android.things.contrib.driver.button.ButtonInputDriver;
 import com.google.android.things.contrib.driver.pwmservo.Servo;
 import com.google.android.things.pio.PeripheralManagerService;
 
 import java.io.IOException;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
 public class MainActivity extends Activity {
 
-    private ButtonInputDriver mButtonInputDriver;
-    private ButtonInputDriver mButtonInputDriverTrigger;
-    private Servo mServo;
-    private Servo mServoTrigger;
-    private double mCurrentAngle;
-    private double mCurrentAngleTrigger;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
+    private Button mButtonTrigger;
+    private Servo mServoElastics;
+    private Servo mServoTrigger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,95 +31,95 @@ public class MainActivity extends Activity {
         Log.d(TAG, "GPIO: " + list);
 
         try {
-            mServo = new Servo(BoardDefaults.getServoPort());
-            mServo.setAngleRange(0f, 180f);
-            mServo.setPulseDurationRange(0.6, 2.4);
-            mServo.setEnabled(true);
+            mServoElastics = new Servo(BoardDefaults.getServoPort());
+            mServoElastics.setAngleRange(0f, 180f);
+            mServoElastics.setPulseDurationRange(0.6, 2.4);
+            mServoElastics.setEnabled(true);
 
             mServoTrigger = new Servo(BoardDefaults.getServoTriggerPort());
             mServoTrigger.setAngleRange(0f, 90f);
             mServoTrigger.setPulseDurationRange(1, 2);
             mServoTrigger.setEnabled(true);
 
-            mButtonInputDriver = new ButtonInputDriver(BoardDefaults.getButtonPort(),
-                    Button.LogicState.PRESSED_WHEN_LOW, KeyEvent.KEYCODE_SPACE);
-            mButtonInputDriver.register();
+            mButtonTrigger = new Button(BoardDefaults.getButtonTriggerPort(),
+                    Button.LogicState.PRESSED_WHEN_LOW);
+            mButtonTrigger.setOnButtonEventListener(new Button.OnButtonEventListener() {
+                @Override
+                public void onButtonEvent(Button button, boolean pressed) {
+                    Log.d(TAG, "onButtonEvent: TRIGGER");
+                    if (pressed) {
+                        fire();
+                    }
+                }
+            });
 
-            mButtonInputDriverTrigger = new ButtonInputDriver(BoardDefaults.getButtonTriggerPort(),
-                    Button.LogicState.PRESSED_WHEN_LOW, KeyEvent.KEYCODE_0);
-            mButtonInputDriverTrigger.register();
+            // Initializing the catapult
+            openTrigger();
+            Thread.sleep(1000);
+            releaseElastics();
+            Thread.sleep(2000);
+            closeTrigger();
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         Log.d(TAG, "Catapult ready");
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SPACE) {
-            toogleServo();
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_0) {
-            toogleTrigger();
-        }
-
-        return super.onKeyDown(keyCode, event);
+    private void stretchElastics() throws IOException {
+        Log.d(TAG, "stretchElastics");
+        mServoElastics.setAngle(mServoElastics.getMaximumAngle());
     }
 
-    private void toogleServo() {
-        if (mCurrentAngle < mServo.getMaximumAngle()) {
-            mCurrentAngle = mServo.getMaximumAngle();
-        } else {
-            mCurrentAngle = mServo.getMinimumAngle();
-        }
+    private void releaseElastics() throws IOException {
+        Log.d(TAG, "releaseElastics");
+        mServoElastics.setAngle(mServoElastics.getMinimumAngle());
+    }
 
+    private void openTrigger() throws IOException {
+        Log.d(TAG, "openTrigger");
+        mServoTrigger.setAngle(mServoTrigger.getMinimumAngle());
+    }
+
+    private void closeTrigger() throws IOException {
+        Log.d(TAG, "closeTrigger");
+        mServoTrigger.setAngle(mServoTrigger.getMaximumAngle());
+    }
+
+    private void fire() {
         try {
-            mServo.setAngle(mCurrentAngle);
+
+            closeTrigger(); // Blocking the shaft
+            Thread.sleep(1000);
+            stretchElastics(); // Rewinding on the elastics
+            Thread.sleep(1000);
+            openTrigger(); // Fire!
+            Thread.sleep(1000);
+            releaseElastics(); // Falling the shaft
+            Thread.sleep(2000);
+            closeTrigger(); // Blocking the shaft
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, "Button pressed fire change angle to " + mCurrentAngle);
-    }
-
-    private void toogleTrigger() {
-        if (mCurrentAngleTrigger < mServoTrigger.getMaximumAngle()) {
-            mCurrentAngleTrigger = mServoTrigger.getMaximumAngle();
-        } else {
-            mCurrentAngleTrigger = mServoTrigger.getMinimumAngle();
-        }
-
-        try {
-            mServoTrigger.setAngle(mCurrentAngleTrigger);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.i(TAG, "Button pressed trigger change angle to " + mCurrentAngleTrigger);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mServo != null) {
+        if (mServoElastics != null) {
             try {
-                mServo.close();
+                mServoElastics.close();
             } catch (IOException e) {
                 Log.e(TAG, "Error closing Servo");
             } finally {
-                mServo = null;
-            }
-        }
-
-        if (mButtonInputDriver != null) {
-            mButtonInputDriver.unregister();
-            try {
-                mButtonInputDriver.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Error closing Button driver", e);
-            } finally {
-                mButtonInputDriver = null;
+                mServoElastics = null;
             }
         }
 
@@ -139,14 +133,13 @@ public class MainActivity extends Activity {
             }
         }
 
-        if (mButtonInputDriverTrigger != null) {
-            mButtonInputDriverTrigger.unregister();
+        if (mButtonTrigger != null) {
             try {
-                mButtonInputDriverTrigger.close();
+                mButtonTrigger.close();
             } catch (IOException e) {
                 Log.e(TAG, "Error closing Button trigger driver", e);
             } finally {
-                mButtonInputDriverTrigger = null;
+                mButtonTrigger = null;
             }
         }
     }
