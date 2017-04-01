@@ -67,12 +67,12 @@ The following pinout diagram illustrates the locations of the available ports ex
 What this means basically is that you can connect up to 2 PWM devices, up to 15 GPIO devices, the Raspberry Pi also has 1 port to connect I²C, SPI and UART devices.  
 Each of these interfaces has a name (e.g.: "BCM4", "UART0", "PWM0"). When you connect a component (e.g. an LED) to the board, you will need to know the name of the connector to communicate with the component.
 
-### Discovering the RainbowHAT
+### Discovering the Rainbow HAT
 
-The RainbowHAT is a board that features sensors, inputs, and displays you can directly plug onto the Raspberry Pi.  
+The Rainbow HAT is a board that features sensors, inputs, and displays you can directly plug onto the Raspberry Pi.  
 It makes it easy to get started with Android Things, skipping the (fun, but time consuming) components wiring part.
 
-Here is a list of the different RainbowHAT components, and their associated connector names:
+Here is a list of the different Rainbow HAT components, and their associated connector names:
 
 * **Red LED**: "BCM6"
 * **Green LED**: "BCM19"
@@ -95,7 +95,7 @@ During this workshop, you will also use an additional hardware component: an **S
 A Servo is a type of geared motor that can only rotate 180 degrees. It is controlled by sending electrical pulses that tell the servo what position it should move to.  
 A servo has three wires, the brown wire is GND, the red one is 5V, and the orange one is PWM.
 
-Now you know that, connect the servo to the following connectors of the RainbowHAT.
+Now you know that, connect the servo to the following connectors of the Rainbow HAT.
 
 [Spoiler: that way!][servo]
 
@@ -164,7 +164,7 @@ protected void onCreate(Bundle savedInstanceState) {
 ```
 
 The `PeripheralManagerService` is an Android Things helper class that provides references of components depending on their types and specified port names.  
-Here, we want a Gpio device on port "BCM6" (RainbowHat's red LED), and we set its direction to initially low (we want the component to start as 'off').
+Here, we want a Gpio device on port "BCM6" (Rainbow HAT's red LED), and we set its direction to initially low (we want the component to start as 'off').
 
 Then, we can light it up using
 
@@ -287,7 +287,7 @@ buzzer.close(); // onDestroy()
 ```
 
 If you take a look at the PWM speaker driver [source code](https://github.com/androidthings/contrib-drivers/blob/master/pwmspeaker/src/main/java/com/google/android/things/contrib/driver/pwmspeaker/Speaker.java), you will be surprised by how small the implementation is.  
-It is actually very similar to what we did manually.
+It is actually very similar to what we wrote manually.
 
 If one day you have to create your own driver, you can see that it may be easier than you might think.
 
@@ -342,7 +342,7 @@ The documentation values seem not to be perfect here. If you want to have a wide
 ## Fasten the servo motor to the catapult
 
 Ok, now you are able to move the servo to its minimum and maximum angle when pressing a button.  
-The next step is to connect it to the catapult, so that it can lock it and release it when pressing a button.
+The next step is to connect it to the catapult, so that the servo can lock and release the catapult when pressing a button.
 
 ![servo2][servo2]
 
@@ -358,20 +358,17 @@ Wouldn't it be funnier if you can control the catapult from your phone / compute
 There are many ways to add remote control capabilities to an Android Things project. Among those:
 
 * Sending a push, via [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/)
-* Building your own time-machine and travel to Year 2018, when bluetooth or Wi-Fi P2P is officially supported on Android Things (it is not yet, on Developer Preview 2 from Year 2017)
-* Embedding an HTTP server in the Android Things project
 * Using Google's [Nearby Connections API](https://developers.google.com/nearby/) to control it over Wi-Fi
+* Embedding an HTTP server (such as [NanoHttpd](https://github.com/NanoHttpd/nanohttpd)) in the Android Things project
 
-Note that we've listed here only the most simple ways to implement wireless control capabilities. There are plenty of other ways.
+Keep in mind this list is not exhaustive. We'll use today an easy way: embedding an HTTP server inside our catapult
 
-In this workshop, we'll guide you through 2 different ways, an easy one (http server) and one that requires some advanced Android skills. (Nearby Connections API). Choose the one you prefer, depending on your motivation / time left.
+### Embedding an HTTP server
 
-### Option 1: Embedding an HTTP server
+NanoHttpd is a tiny web server, written in Java.  
+It can be embedded to an Android project using a single import in the `build.gradle` file (_we have already imported the dependency, so you don't have to do it_).
 
-[NanoHttpd](https://github.com/NanoHttpd/nanohttpd) is a tiny web server in Java.  
-It can be embedded in an Android project using a single import in your `build.gradle` file (_we have already imported the dependency, so you don't have to do anything_).
-
-To serve embedded web pages, you need to create a class that extends `NanoHTTPD` and overrides a `serve` method.
+To serve embedded web pages, you first need to create a class that extends `NanoHTTPD` and overrides a `serve` method.
 
 ```java
 public class HttpdServer extends NanoHTTPD {
@@ -402,7 +399,7 @@ public class HttpdServer extends NanoHTTPD {
       "  function fire() { window.location = '?fire=true'; }" +
       "</script></head>" +
       "<body>" +
-      "  <button onclick=\"fire();\">FIRE!!1!</button>" +
+      "  <button style=\"width: 100%; height: 100%; font-size: 4em;\" onclick=\"fire();\">FIRE!</button>" +
       "</body></html>";
 
       return newFixedLengthResponse(html);
@@ -410,7 +407,7 @@ public class HttpdServer extends NanoHTTPD {
 }
 ```
 
-To start and stop the server, add the following code to your `MainActivity` class:
+Then, add the following code to your `MainActivity` class to start and stop the server:
 
 ```java
 private HttpdServer httpdserver;
@@ -424,46 +421,30 @@ httpdserver.stop();
 ```
 
 Note: if you tried starting the server twice _(i.e.: 2 deployments without calling the `httpdserver.stop()` method)_, the embedded server may not work anymore ("Unable to connect").  
-You can consult the logs via `adb logcat`.  
-If you see the following error: `java.net.BindException: Address already in use`
-Try uninstalling the app: `adb uninstall com.example.androidthings.myproject adb uninstall com.example.androidthings.myproject`  
-and deploy it again.
+Don't forget that you can consult the logs anytime (from Android Studio, in the "Android Monitor" tab at the bottom of the screen).  
+If you see the following error: `java.net.BindException: Address already in use`, try uninstalling the app and deploy it again:
+`adb uninstall com.example.androidthings.myproject adb uninstall com.example.androidthings.myproject`
 
 Now, the Android Things device will embed an HTTP server.
 
-To control it, start a web browser to the `http://<RASPBERRY_IP>:8888/` URL, and click on the button to move the servo motor wirelessly.
-
-*Optional*: Feel free to prettify the embedded page. Also, if you are familiar with the Android SDK, try moving the webpage in the assets folder.
-
-
-### Option 2: Using the Nearby Connections API
-
-One of the advantages of Android Things is its integration with Google services.  
-You could use Firebase Cloud Messaging, or the Play Services Nearby API seamlessly. Here, we will use the Nearby Connections API.
-
-#### About the Nearby Connections API
-You will need to create a client (android/ios device) and a host (android things board)
-
-TODO: ça va prendre du temps, je ferai cette partie samedi
-TODO: faire une branche a part avec le code client ? à voir...
+To control it, start a web browser to the `http://<RASPBERRY_IP>:8888/` URL, and click on the button to move the servo motor remotely.
 
 
 ## What's next?
 
-You've done everything already? Ouch you were fast! Here are some suggestions of what you can do now:
+Now it's your turn! Try to improve your catapult the way you want, developing some features that make it unique.  
+If you're a little lost on ideas, here are some suggestions of what you could do right now:
 
 ### Show the world your awesomeness
 
-Proud of what you did today? Tweet pics/videos using the `#TODO` hashtag.
+Proud of what you achieved today? Tweet pics/videos using the `#ThingsLethalWeapon` hashtag.
 You can also follow us ([@Eyal_Lezmy](https://twitter.com/Eyal_Lezmy), [@romemore](https://twitter.com/romemore), [@Nilhcem](https://twitter.com/Nilhcem)) so we can know your Twitter handle and start stalking you.
 
+### Use the LED strip
 
-### Use the LED strip.
-
-The RainbowHat is named that way because it embeds an LED strip you can use to show the colors of the rainbow.
+The Rainbow HAT is named that way because it embeds an LED strip you can use to show the colors of the rainbow.
 
 ```java
-// Light up the rainbow
 Apa102 ledstrip = RainbowHat.openLedStrip();
 ledstrip.setBrightness(1);
 int[] rainbow = new int[RainbowHat.LEDSTRIP_LENGTH];
@@ -472,31 +453,36 @@ for (int i = 0; i < rainbow.length; i++) {
 }
 ledstrip.write(rainbow);
 
-// Close the device when done (onDestroy).
+// Close the device when done (onDestroy)
 ledstrip.close();
 ```
 
-You can also create a Rainbow animation
+Try to use this strip and create a colorful, or funky animation.
 
 ![rainbow][rainbow]
 
+### Use the segment display
 
-### Try the segment display
+The Rainbow HAT features a nice 7-segment display. Sadly, we didn't use it so far.
+
+Now it's our chance. Use the following code to display some text:
 
 ```java
-// Display a string on the segment display.
 AlphanumericDisplay segment = RainbowHat.openDisplay();
 segment.setBrightness(Ht16k33.HT16K33_BRIGHTNESS_MAX);
-segment.display("1234");
+segment.display("BOOM");
 segment.setEnabled(true);
-// Close the device when done (onDestroy).
+// Close the device when done (onDestroy)
 segment.close();
 ```
 
-A 4 digit screen is kind of limited, but enough to display important words, such as "AHOY", "YARR", "GROG", "OMG!", and "WTF?"
+A 4 digit screen is kind of limited, but it's enough to display important words such as "OMG!", WTF?", "AHOY", "GROG", and other YARR"s.  
+If you feel it's too restrictive, create a scrolling text animator.
 
 
-### Display the room temperature on the segment display
+### Show the room temperature on the segment display
+
+The Rainbow HAT also embeds a temperature sensor. Well... not that it's particularly important for a catapult to be aware of the room temperature, but who knows?  
 
 ```java
 Bmx280 sensor = RainbowHat.openSensor();
@@ -505,7 +491,7 @@ AlphanumericDisplay segment = RainbowHat.openDisplay();
 segment.setBrightness(Ht16k33.HT16K33_BRIGHTNESS_MAX);
 segment.display(sensor.readTemperature());
 segment.setEnabled(true);
-// Close the devices when done (onDestroy).
+// Close the devices when done (onDestroy)
 sensor.close();
 segment.close();
 ```
@@ -516,24 +502,31 @@ With the PWM speaker, you can play some melody.
 
 [Here is a list of frequencies per notes](https://www.arduino.cc/en/Tutorial/ToneMelody?action=sourceblock&num=2)
 
-[Here is a code sample](https://github.com/androidthings/drivers-samples/tree/master/pwmspeaker)
-
+[And here is a code sample](https://github.com/androidthings/drivers-samples/tree/master/pwmspeaker)
 
 ### Read the Android Things documentation
 
-Official documentation is available [here](https://developer.android.com/things/index.html)
+For more information about Android Things, the official documentation is available [here](https://developer.android.com/things/index.html)
 
+### Create a native companion app
+
+Create a native iOS / Android / Desktop app that sends an HTTP GET request to the catapult to throw a projectile.  
+Don't use that ugly embedded web page anymore.
+
+### Use Firebase Cloud Messaging instead of NanoHttpd
+
+You prefer using a Google service instead of a generic HTTP server? Try using [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/) or check out other [Firebase features](https://firebase.google.com/) you can use.
+
+### Integrate the catapult to a third-party service
+
+Throw a projectile when the CI build fails, or when your alarm clock rings for a sweet wake up.
 
 ## A final word
 
-We hope that you have enjoyed this workshop.  
-Looking forward to see your Android Things projects now.
+We hope that you have enjoyed this workshop, and can't wait looking forward to your future Android Things projects.
 
-
-TODO update image links
-
-[raspberrypi-pinout]: https://raw.githubusercontent.com/Nilhcem/android-things-workshop/instructions/doc/assets/raspberrypi_pinout.png
-[servo]: https://raw.githubusercontent.com/Nilhcem/android-things-workshop/instructions/doc/assets/servo.jpg
-[servodoc]: https://raw.githubusercontent.com/Nilhcem/android-things-workshop/instructions/doc/assets/servodoc.png
-[servo2]: https://raw.githubusercontent.com/Nilhcem/android-things-workshop/instructions/doc/assets/servo2.jpg
-[rainbow]: https://raw.githubusercontent.com/Nilhcem/android-things-workshop/instructions/doc/assets/rainbow.gif
+[raspberrypi-pinout]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/raspberrypi_pinout.png
+[servo]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/servo.jpg
+[servodoc]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/servodoc.png
+[servo2]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/servo2.jpg
+[rainbow]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/rainbow.gif
