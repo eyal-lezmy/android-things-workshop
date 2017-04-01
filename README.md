@@ -7,7 +7,7 @@ Do no harm! We know how tempting it could be, but don't try to hurt other member
 
 ## Setup
 
-Clone the project, import it to [Android Studio 2.3](https://developer.android.com/studio/index.html), and build it
+Clone the project, import it to [Android Studio](https://developer.android.com/studio/index.html), and build it
 
 ```bash
 git clone https://github.com/eyal-lezmy/android-things-workshop.git
@@ -335,6 +335,9 @@ servo.setAngle(servo.getMaximumAngle());
 Using this code snippet, move the servo to its minimum angle when pressing a button, and move it to its maximum angle when pressing the button again.  
 You'll probably have to create a boolean variable that keeps the state of the PWM (whether it is at its minimum or maximum angle).
 
+**Note**: After implementing this code, you'll probably notice that setting a 1ms-2ms pulse duration range only makes the servo move around a 90° angle instead of 180°.  
+The documentation values seem not to be perfect here. If you want to have a wider angle, use a wider range like 0.6ms-2.4ms for example.
+
 
 ## Fasten the servo motor to the catapult
 
@@ -357,7 +360,7 @@ There are many ways to add remote control capabilities to an Android Things proj
 * Sending a push, via [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/)
 * Building your own time-machine and travel to Year 2018, when bluetooth or Wi-Fi P2P is officially supported on Android Things (it is not yet, on Developer Preview 2 from Year 2017)
 * Embedding an HTTP server in the Android Things project
-* Using Google's Nearby Connections API to control it over Wi-Fi
+* Using Google's [Nearby Connections API](https://developers.google.com/nearby/) to control it over Wi-Fi
 
 Note that we've listed here only the most simple ways to implement wireless control capabilities. There are plenty of other ways.
 
