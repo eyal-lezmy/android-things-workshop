@@ -525,8 +525,8 @@ Throw a projectile when the CI build fails, or when your alarm clock rings for a
 
 We hope that you have enjoyed this workshop, and can't wait looking forward to your future Android Things projects.
 
-[raspberrypi-pinout]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/raspberrypi_pinout.png
-[servo]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/servo.jpg
-[servodoc]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/servodoc.png
-[servo2]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/servo2.jpg
-[rainbow]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/instructions/doc/assets/rainbow.gif
+[raspberrypi-pinout]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/raspberrypi_pinout.png
+[servo]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/servo.jpg
+[servodoc]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/servodoc.png
+[servo2]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/servo2.jpg
+[rainbow]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/rainbow.gif
