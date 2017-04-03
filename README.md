@@ -384,7 +384,6 @@ public class HttpdServer extends NanoHTTPD {
   public HttpdServer(OnFireTriggerListener listener) {
     super(PORT);
     this.listener = listener;
-    start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
   }
 
   @Override
@@ -423,7 +422,7 @@ httpdserver.stop();
 Note: if you tried starting the server twice _(i.e.: 2 deployments without calling the `httpdserver.stop()` method)_, the embedded server may not work anymore ("Unable to connect").  
 Don't forget that you can consult the logs anytime (from Android Studio, in the "Android Monitor" tab at the bottom of the screen).  
 If you see the following error: `java.net.BindException: Address already in use`, try uninstalling the app and deploy it again:
-`adb uninstall com.example.androidthings.myproject adb uninstall com.example.androidthings.myproject`
+`adb uninstall com.example.androidthings.myproject`
 
 Now, the Android Things device will embed an HTTP server.
 
