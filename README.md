@@ -268,8 +268,9 @@ Now, integrate that code to your project, to play some sound when a button is pr
 ```java
 int[] frequencies = new int[] { 261, 294, 329, 349, 392, 440, 493, 523 };
 pwm.setEnabled(true);
+
 for (int frequency : frequencies) {
-  pwm.setPwmFrequencyHz(frequencies[i]);
+  pwm.setPwmFrequencyHz(frequency);
   Thread.sleep(300);
 }
 pwm.setEnabled(false);
