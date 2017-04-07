@@ -1,6 +1,6 @@
 # Hands-on Lab Android Things
 
-This codelab will introduce you to the key concepts to create your own IoT devices using the Android Things platform.
+This codelab will introduce you to the key concepts to creating your own IoT devices using the Android Things platform.
 By the end of the codelab, you will build your first connected catapult and control it wirelessly.
 
 Do no harm! We know how tempting it could be, but don't try to hurt other members of the codelab with your catapult. It would only bring you trouble (hint: they may retaliate with a more powerful one).
@@ -13,7 +13,7 @@ This workshop has been prepared and is maintained by [Gautier Mechling](https://
 
 ## Setup
 
-Clone the project, import it to [Android Studio](https://developer.android.com/studio/index.html), and build it
+Clone the project, import it to [Android Studio](https://developer.android.com/studio/index.html), and build it.
 
 ```bash
 git clone https://github.com/eyal-lezmy/android-things-workshop.git
@@ -444,7 +444,6 @@ If you're a little lost on ideas, here are some suggestions of what you could do
 ### Show the world your awesomeness
 
 Proud of what you achieved today? Tweet pics/videos using the `#ThingsLethalWeapon` hashtag.
-You can also follow us ([@Eyal_Lezmy](https://twitter.com/Eyal_Lezmy), [@romemore](https://twitter.com/romemore), [@Nilhcem](https://twitter.com/Nilhcem)) so we can know your Twitter handle and start stalking you.
 
 ### Use the LED strip
 
