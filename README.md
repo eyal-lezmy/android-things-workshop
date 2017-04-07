@@ -1,9 +1,15 @@
 # Hands-on Lab Android Things
 
-This codelab will introduce you to the key concepts to creating your own IoT devices using the Android Things platform.  
+This codelab will introduce you to the key concepts to create your own IoT devices using the Android Things platform.
 By the end of the codelab, you will build your first connected catapult and control it wirelessly.
 
 Do no harm! We know how tempting it could be, but don't try to hurt other members of the codelab with your catapult. It would only bring you trouble (hint: they may retaliate with a more powerful one).
+
+
+## Authors
+
+This workshop has been prepared and is maintained by [Gautier Mechling](https://twitter.com/Nilhcem), [Romain Ménétrier](https://twitter.com/romemore) and [Eyal Lezmy](https://twitter.com/Eyal_Lezmy).
+
 
 ## Setup
 
