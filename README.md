@@ -55,7 +55,7 @@ To save you some time, we have already prepared a sample project, flashed Androi
 If you want to repeat this at home, here is what we did:
 
 - [Download and flash Android Things on the Raspberry Pi 3](https://developer.android.com/things/hardware/raspberrypi.html)
-- [Clone the Android Things New Project Template](https://github.com/androidthings/new-project-template)
+- Use Android Studio (3 or above) to create a new Android Things project
 - Add dependencies in the `build.gradle` file
 
 That's all!  
@@ -70,7 +70,7 @@ The following pinout diagram illustrates the locations of the available ports ex
 
 ![Raspberry Pi pinout][raspberrypi-pinout]
 
-What this means basically is that you can connect up to 2 PWM devices, up to 15 GPIO devices, the Raspberry Pi also has 1 port to connect I²C, SPI and UART devices.  
+As you can see, with the Raspberry Pi 3, you cannot connect more than 2 PWM devices. The Raspberry Pi also has 1 port to connect I²C, SPI and UART devices.  
 Each of these interfaces has a name (e.g.: "BCM4", "UART0", "PWM0"). When you connect a component (e.g. an LED) to the board, you will need to know the name of the connector to communicate with the component.
 
 ### Discovering the Rainbow HAT
@@ -114,11 +114,11 @@ If you press buttons B and C, the servo will move to a specific direction and so
 
 Try it now, once everything is OK, go to the next step.
 
-### Deploy the project on the Raspberry Pi
+### Deploy your new project on the Raspberry Pi
 
-Now that the environment is set up, you can deploy the start project to the Raspberry Pi.  
+Now that the environment is set up, you can deploy this bootstrap project to the Raspberry Pi.  
 
-As you know, relying on a conference Wi-Fi for a workshop is like living on the edge. That's a risk we prefer not to take, so we decided to connect the Raspberry Pi to a different local Wi-Fi network.  
+As you may know, relying on a conference Wi-Fi for a workshop is like living on the edge. That's a risk we prefer not to take, so we decided to connect the Raspberry Pi to a different local Wi-Fi network.  
 Your development machine should be connected to the following Wi-Fi network to deploy your Android Things application to the Raspberry Pi.
 
 * **Security**: WPA2
@@ -149,7 +149,7 @@ Congratulations, you have deployed your first Android Things app!
 
 ### Turning on LEDs
 
-Succeeding in turning an LED on is a necessary first step in understanding GPIOs (General Purpose Input Output).  
+Succeeding in turning on an LED is a necessary first step in understanding GPIOs (General Purpose Input Output).  
 
 An LED is a GPIO device that glows when electricity is passed through it.  
 To feed current to an LED, we will use the Gpio's `setValue(boolean)` method.  
@@ -170,7 +170,7 @@ protected void onCreate(Bundle savedInstanceState) {
 ```
 
 The `PeripheralManagerService` is an Android Things helper class that provides references of components depending on their types and specified port names.  
-Here, we want a Gpio device on port "BCM6" (Rainbow HAT's red LED), and we set its direction to initially low (we want the component to start as 'off').
+Here, we want a Gpio device on port "BCM6" (Rainbow HAT's red LED, [that one][rainbowled]), and we set its direction to initially low (we want the component to start as 'off').
 
 Then, we can light it up using
 
@@ -199,7 +199,7 @@ Feel free to execute this code on a different thread if you want. Additionally, 
 
 ### Buttons
 
-Great! You know how to use Android to make LEDs blink.  
+Great! You know how to use Android to blink LEDs.  
 Now, we will create a light switch: when a user presses a button, it should light an LED. When the button is pressed again, the LED should be off.
 
 Android Things provides an official `Button` driver to let us deal with physical buttons:
@@ -236,7 +236,7 @@ The button driver ([source code](https://github.com/androidthings/contrib-driver
 
 ### Buzzer
 
-Turning on an LED when a button is pressed is cool, but turning on an LED**, while playing some sound** when a button is pressed is even cooler.  
+Turning on an LED when a button is pressed is cool, but turning on an LED, **while playing some sound** when a button is pressed is even cooler.  
 
 Remember: GPIOs are only for [`true`, `false`] binary operations. Either your component is fed by some current, either it is not.  
 While it is possible to use GPIO to play some sound, this would mean that you could play only a single and unique tone, that's quite limited.  
@@ -532,6 +532,7 @@ We hope that you have enjoyed this workshop, and can't wait looking forward to y
 
 [raspberrypi-pinout]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/raspberrypi_pinout.png
 [servo]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/servo.jpg
+[rainbowled]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/rainbowredled.jpg
 [servodoc]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/servodoc.png
 [servo2]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/servo2.jpg
 [rainbow]: https://raw.githubusercontent.com/eyal-lezmy/android-things-workshop/master/doc/assets/rainbow.gif
