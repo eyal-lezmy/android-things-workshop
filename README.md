@@ -105,15 +105,6 @@ Now you know that, connect the servo to the following connectors of the Rainbow 
 
 [Spoiler: that way!][servo]
 
-### Test the Android Things board
-
-We have installed a program on the Raspberry Pi to let you test the board.
-
-Once the Raspberry Pi is fully started, it will emit a sound to let you know that it is ready.  
-If you press buttons B and C, the servo will move to a specific direction and some LEDs will be turned on.
-
-Try it now, once everything is OK, go to the next step.
-
 ### Deploy your new project on the Raspberry Pi
 
 Now that the environment is set up, you can deploy this bootstrap project to the Raspberry Pi.  
