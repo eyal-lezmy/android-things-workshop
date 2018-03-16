@@ -59,7 +59,7 @@ If you want to repeat this at home, here is what we did:
 - Add dependencies in the `build.gradle` file
 
 That's all!  
-We've also built a paper catapult for you. How-to video [here](https://www.youtube.com/watch?v=9JvV8PWawLs)
+We've also built a paper catapult for you. How-to video [here](https://www.youtube.com/watch?v=9JvV8PWawLs).
 
 
 ## Hardware
@@ -92,7 +92,7 @@ Here is a list of the different Rainbow HAT components, and their associated con
 * **Temperature Sensor**: "I2C1"
 * **Additional PWM**: "PWM0"
 
-This information will be useful later on, when we will ask you to manipulate some specific components.
+This information will be useful later on, when we ask you to manipulate some specific components.
 
 ### Servo motor
 
@@ -101,11 +101,11 @@ During this workshop, you will also use an additional hardware component: an **S
 A Servo is a type of geared motor that can only rotate 180 degrees. It is controlled by sending electrical pulses that tell the servo what position it should move to.  
 A servo has three wires, the brown wire is GND, the red one is 5V, and the orange one is PWM.
 
-Now you know that, connect the servo to the following connectors of the Rainbow HAT.
+Now you know that, your first task is to **connect the servo to the following connectors of the Rainbow HAT**.
 
 [Spoiler: that way!][servo]
 
-### Deploy your new project on the Raspberry Pi
+### Deploy your new project to the Raspberry Pi
 
 Now that the environment is set up, you can deploy this bootstrap project to the Raspberry Pi.  
 
@@ -154,8 +154,8 @@ private Gpio led;
 protected void onCreate(Bundle savedInstanceState) {
   super.onCreate(savedInstanceState);
 
-  PeripheralManagerService service = new PeripheralManagerService();
-  led = service.openGpio("BCM6");
+  PeripheralManager manager = PeripheralManager.getInstance();
+  led = manager.openGpio("BCM6");
   led.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
 }
 ```
@@ -185,7 +185,7 @@ while (true) {
 ```
 
 *Optional*: if you are familiar with Android, you probably noticed that we made a `sleep` call on the main thread.  
-Feel free to execute this code on a different thread if you want. Additionally, if you are an RxJava fan, you could also try to use Rx (`e.g. Observable.interval`) to blink your LEDs . Using a reactive library to blink LEDs... Welcome to 2017!
+Feel free to execute this code on a different thread if you want. Additionally, if you are an RxJava fan, you could also try to use Rx (`e.g. Observable.interval`) to blink your LEDs . Using a reactive library to blink LEDs... Welcome to 2018!
 
 
 ### Buttons
@@ -240,8 +240,8 @@ If you vary the frequency, the buzzer will play different tones.
 
 ```java
 // Initialize the buzzer
-PeripheralManagerService service = new PeripheralManagerService();
-Pwm pwm = service.openPwm("PWM1");
+PeripheralManager manager = PeripheralManager.getInstance();
+Pwm pwm = manager.openPwm("PWM1");
 pwm.setPwmDutyCycle(50.0); // square wave
 
 // Play a note
