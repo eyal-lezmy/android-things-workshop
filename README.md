@@ -113,7 +113,7 @@ As you may know, relying on a conference Wi-Fi for a workshop is like living on 
 Your development machine should be connected to the following Wi-Fi network to deploy your Android Things application to the Raspberry Pi.
 
 * **Security**: WPA2
-* **SSID**: Somethings
+* **SSID**: SomethingsPC
 * **Password**: Somethings
 
 Make sure the Raspberry Pi is powered on, then use adb to connect the Raspberry Pi to your development computer over Wi-Fi.
