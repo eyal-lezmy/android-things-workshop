@@ -390,9 +390,7 @@ public class HttpdServer extends NanoHTTPD {
     Map<String, List<String>> parameters = session.getParameters();
       if (parameters.get("fire") != null) {
         listener.onFireTriggered();
-      }
-      else if (parameters.get("armed") != null)
-      {
+      } else if (parameters.get("armed") != null) {
         listener.onArmTriggered();
       }
 
