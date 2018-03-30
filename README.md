@@ -185,7 +185,7 @@ while (true) {
 ```
 
 *Optional*: if you are familiar with Android, you probably noticed that we made a `sleep` call on the main thread.  
-Feel free to execute this code on a different thread if you want. Additionally, if you are an RxJava fan, you could also try to use Rx (`e.g. Observable.interval`) to blink your LEDs . Using a reactive library to blink LEDs... Welcome to 2018!
+Feel free to execute this code on a different thread if you want. Additionally, if you are an RxJava fan, you could also try to use Rx (`e.g. Observable.interval`) to blink your LEDs . Using a reactive library to blink LEDs ? Welcome to 2017... Or if you want to embrace the future, you could use Kotlin coroutines ;)
 
 
 ### Buttons
@@ -375,6 +375,7 @@ public class HttpdServer extends NanoHTTPD {
 
   public interface OnFireTriggerListener {
     void onFireTriggered();
+    void onArmTriggered();
   }
 
   private OnFireTriggerListener listener;
@@ -390,14 +391,21 @@ public class HttpdServer extends NanoHTTPD {
       if (parameters.get("fire") != null) {
         listener.onFireTriggered();
       }
+      else if (parameters.get("armed") != null)
+      {
+        listener.onArmTriggered();
+      }
 
     String html =
-      "<html><head><script type=\"text/javascript\">" +
-      "  function fire() { window.location = '?fire=true'; }" +
-      "</script></head>" +
-      "<body>" +
-      "  <button style=\"width: 100%; height: 100%; font-size: 4em;\" onclick=\"fire();\">FIRE!</button>" +
-      "</body></html>";
+      "<html><head>"
+      +  "<script type=\"text/javascript\">"
+      +  " function fire() { window.location = '?fire=true'; }"
+      +  " function arm() { window.location = '?armed=true'; }"
+      +  "</script></head>"
+      + "<body>"
+      + "<button style=\"width: 50%; height: 100%; font-size: 4em;\" onclick=\"fire();\">FIRE!</button>"
+      + "<button style=\"width: 50%; height: 100%; font-size: 4em;\" onclick=\"arm();\">Arm Catapult!</button>"
+      + "</body></html>";
 
       return newFixedLengthResponse(html);
     }
